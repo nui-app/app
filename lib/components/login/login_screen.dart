@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:redux/redux.dart';
 
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:nui/routes.dart';
 
 import 'package:nui/models/app_state.dart';
+import 'package:nui/models/authn/authn.dart';
 import 'package:nui/models/authn/authn_state.dart';
 
 import 'package:nui/actions/authn_actions.dart';
@@ -19,6 +23,8 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   String email = "";
   String password = "";
+
+  final storage = FlutterSecureStorage();
 
   final TextEditingController emailFilter = TextEditingController();
   final TextEditingController passwordFilter = TextEditingController();
@@ -49,6 +55,12 @@ class LoginScreenState extends State<LoginScreen> {
     return StoreConnector<AppState, LoginScreenProps>(
       converter: (store) => mapStateToProps(store),
       builder: (context, props) {
+        // AuthN data = props.authenticateResponse.data;
+        // if (data != null) {
+        //   print(data.token);
+        //   Navigator.pushNamed(context, AppRoutes.splash);
+        // }
+
         return Scaffold(
           appBar: AppBar(
             title: Text('Login'),
@@ -65,9 +77,7 @@ class LoginScreenState extends State<LoginScreen> {
                 RaisedButton(
                   child: Text('Submit'),
                   onPressed: () {
-                    props.authenticate(email, password).then((token) {
-                      print(token);
-                    });
+                    props.authenticate(this.email, this.password);
                   },
                 ),
               ],
@@ -82,7 +92,7 @@ class LoginScreenState extends State<LoginScreen> {
     return [
       Container(
         child: TextField(
-          controller: null,
+          controller: this.emailFilter,
           decoration: InputDecoration(
             labelText: 'E-mail',
           ),
@@ -90,8 +100,8 @@ class LoginScreenState extends State<LoginScreen> {
       ),
       Container(
         child: TextField(
-          controller: null,
           obscureText: true,
+          controller: this.passwordFilter,
           decoration: InputDecoration(
             labelText: 'Password'
           ),
@@ -102,12 +112,12 @@ class LoginScreenState extends State<LoginScreen> {
 }
 
 class LoginScreenProps {
+  final Function authenticate;
   final AuthenticateState authenticateResponse;
-  final Function(String email, String password) authenticate;
 
   LoginScreenProps({
-    this.authenticateResponse,
     this.authenticate,
+    this.authenticateResponse,
   });
 }
 

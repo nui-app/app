@@ -13,7 +13,8 @@ RSAA authenticateRequest(String email, String password) {
   return
     RSAA(
       method: 'POST',
-      endpoint: 'http://jsonplaceholder.typicode.com/users',
+      endpoint: 'http://10.0.2.2:8080/api/authenticate',
+      body: '{"email": "carloshenriquen.lira@gmail.com", "password": "password"}',
       types: [
         AUTHENTICATE_REQUEST,
         AUTHENTICATE_SUCCESS,

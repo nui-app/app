@@ -22,10 +22,8 @@ class SplashScreenState extends State<SplashScreen> {
     super.initState();
     
     this.readToken().then((token) {
-      print(token);
-
       if (token == null || token.isEmpty) {
-        Navigator.pushNamed(context, AppRoutes.login);
+        Navigator.pushReplacementNamed(context, AppRoutes.login);
       } else {
         widget.onInit("test", "test");
       }
@@ -43,7 +41,7 @@ class SplashScreenState extends State<SplashScreen> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-            image: AssetImage('assets/splash.jpg'),
+            image: AssetImage('assets/splash.png'),
             fit: BoxFit.cover
         ) ,
       ),

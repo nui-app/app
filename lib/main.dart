@@ -13,6 +13,7 @@ import 'package:nui/actions/authn_actions.dart';
 
 import 'package:nui/reducers/app_reducer.dart';
 
+import 'package:nui/components/login/login_screen.dart';
 import 'package:nui/components/splash/splash_screen.dart';
 
 void main() => runApp(App());
@@ -37,6 +38,7 @@ class App extends StatelessWidget {
           AppRoutes.splash: (context) => SplashScreen(
             onInit: (String email, String password) => this.store.dispatch(authenticate(email, password)),
           ),
+          AppRoutes.login: (context) => LoginScreen(),
         },
       ),
     );
