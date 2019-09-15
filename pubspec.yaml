@@ -11,14 +11,24 @@ dependencies:
   redux: ^3.0.0
   flutter_redux: ^0.5.3
   redux_thunk: ^0.2.1
-  redux_api_middleware: ^0.1.7
+  redux_api_middleware: ^0.1.9
   flutter_secure_storage: ^3.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.3
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/splash.png
+    - assets/logo.png
+    - assets/pattern.jpg
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path_android: "assets/launcher/ic_launcher.png"
+  image_path_ios: "assets/launcher/My-Launcher-Icon.png"
+  adaptive_icon_background: "assets/launcher/background.png"
+  adaptive_icon_foreground: "assets/launcher/foreground.png"

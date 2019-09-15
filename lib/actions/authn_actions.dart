@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux_api_middleware/redux_api_middleware.dart';
@@ -14,7 +16,10 @@ RSAA authenticateRequest(String email, String password) {
     RSAA(
       method: 'POST',
       endpoint: 'http://10.0.2.2:8080/api/authenticate',
-      body: '{"email": "carloshenriquen.lira@gmail.com", "password": "password"}',
+      body: json.encode({
+        'email': email,
+        'password': password,
+      }),
       types: [
         AUTHENTICATE_REQUEST,
         AUTHENTICATE_SUCCESS,

@@ -10,8 +10,6 @@ import 'package:nui/actions/authn_actions.dart';
 AuthNState authNReducer(AuthNState state, FSA action) {
   AuthNState newState = state;
 
-  print(action.type);
-
   switch (action.type) {
     case AUTHENTICATE_REQUEST:
       newState.authenticate.error = null;

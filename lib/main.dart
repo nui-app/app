@@ -9,12 +9,11 @@ import 'package:nui/routes.dart';
 
 import 'package:nui/models/app_state.dart';
 
-import 'package:nui/actions/authn_actions.dart';
-
 import 'package:nui/reducers/app_reducer.dart';
 
+import 'package:nui/components/home/home_screen.dart';
 import 'package:nui/components/login/login_screen.dart';
-import 'package:nui/components/splash/splash_screen.dart';
+import 'package:nui/components/loading/loading_screen.dart';
 
 void main() => runApp(App());
 
@@ -32,13 +31,12 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'Nui',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.green,
         ),
         routes: {
-          AppRoutes.splash: (context) => SplashScreen(
-            onInit: (String email, String password) => this.store.dispatch(authenticate(email, password)),
-          ),
+          AppRoutes.loading: (context) => LoadingScreen(),
           AppRoutes.login: (context) => LoginScreen(),
+          AppRoutes.home: (context) => HomeScreen(),
         },
       ),
     );

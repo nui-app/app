@@ -1,4 +1,5 @@
 class AppRoutes {
-  static final splash = '/';
+  static final loading = '/';
   static final login = '/login';
+  static final home = '/home';
 }

@@ -13,7 +13,7 @@ class AuthNState {
 }
 
 class AuthenticateState {
-  dynamic error;
+  Error error;
   bool loading;
   AuthN data;
 

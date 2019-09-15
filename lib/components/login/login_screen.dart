@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:nui/components/base/base_screen.dart';
 
 import 'package:redux/redux.dart';
 
+import 'package:nui/keys.dart';
 import 'package:nui/routes.dart';
 
 import 'package:nui/models/app_state.dart';
@@ -14,6 +18,8 @@ import 'package:nui/models/authn/authn_state.dart';
 import 'package:nui/actions/authn_actions.dart';
 
 class LoginScreen extends StatefulWidget {
+  LoginScreen() : super(key: AppKeys.loginScreen);
+
   @override
   LoginScreenState createState() {
     return LoginScreenState();
@@ -34,38 +40,28 @@ class LoginScreenState extends State<LoginScreen> {
     this.passwordFilter.addListener(this.passwordListener);
   }
 
-  void emailListener() {
-    if (this.emailFilter.text.isEmpty) {
-      this.email = '';
-    } else {
-      this.email = this.emailFilter.text;
-    }
-  }
+  void handleDidChange(LoginScreenProps newProps) async {
+    AuthN data = newProps.authenticateResponse.data;
+    if (data != null) {
+      await this.storage.write(
+        key: 'access_data',
+        value: json.encode(data.toJSON()),
+      );
 
-  void passwordListener() {
-    if (this.passwordFilter.text.isEmpty) {
-      this.password = "";
-    } else {
-      this.password = passwordFilter.text;
+      Navigator.pushReplacementNamed(this.context, AppRoutes.home);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, LoginScreenProps>(
+      distinct: true,
       converter: (store) => mapStateToProps(store),
+      onDidChange: (newProps) => this.handleDidChange(newProps),
       builder: (context, props) {
-        // AuthN data = props.authenticateResponse.data;
-        // if (data != null) {
-        //   print(data.token);
-        //   Navigator.pushNamed(context, AppRoutes.splash);
-        // }
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Login'),
-          ),
-          body: Container(
+        return BaseScreen(
+          title: 'Login',
+          child: Container(
             padding: EdgeInsets.all(16.0),
             child: Column(
               children: <Widget>[
@@ -108,6 +104,22 @@ class LoginScreenState extends State<LoginScreen> {
         ),
       ),
     ];
+  }
+
+  void emailListener() {
+    if (this.emailFilter.text.isEmpty) {
+      this.email = '';
+    } else {
+      this.email = this.emailFilter.text;
+    }
+  }
+
+  void passwordListener() {
+    if (this.passwordFilter.text.isEmpty) {
+      this.password = "";
+    } else {
+      this.password = passwordFilter.text;
+    }
   }
 }
 
