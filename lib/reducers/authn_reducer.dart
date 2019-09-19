@@ -7,10 +7,12 @@ import 'package:nui/models/authn/authn_state.dart';
 
 import 'package:nui/actions/authn_actions.dart';
 
-AuthNState authNReducer(AuthNState state, FSA action) {
+AuthNState authNReducer(AuthNState state, dynamic action) {
   AuthNState newState = state;
 
-  switch (action.type) {
+  String type = action is FSA ? action.type : action['type'];
+
+  switch (type) {
     case AUTHENTICATE_REQUEST:
       newState.authenticate.error = null;
       newState.authenticate.loading = true;
@@ -28,6 +30,12 @@ AuthNState authNReducer(AuthNState state, FSA action) {
       newState.authenticate.loading = false;
       newState.authenticate.data = null;
       return newState;
+
+
+    case SET_ACCESS_TOKEN:
+      newState.accessToken = action['token'];
+      return newState;
+
 
     default:
       return newState;

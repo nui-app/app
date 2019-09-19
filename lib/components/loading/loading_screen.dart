@@ -14,12 +14,15 @@ import 'package:nui/models/authn/authn.dart';
 import 'package:nui/models/user/user_state.dart';
 
 import 'package:nui/actions/user_actions.dart';
+import 'package:nui/actions/authn_actions.dart';
 
 import 'package:nui/components/loading/animated_logo.dart';
 import 'package:redux_api_middleware/redux_api_middleware.dart';
 
 class LoadingScreen extends StatefulWidget {
-  LoadingScreen() : super(key: AppKeys.homeScreen);
+  final storage = FlutterSecureStorage();
+
+  LoadingScreen() : super(key: AppKeys.mainScreen);
 
   @override
   State<StatefulWidget> createState() {
@@ -28,16 +31,17 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderStateMixin {
-  final storage = FlutterSecureStorage();
+  String accessToken = '';
 
   void handleInitialBuild(LoadingScreenProps props) {
-    this.storage.read(
+    widget.storage.read(
       key: 'access_data',
     ).then((data) {
       if (data == null) {
-        Future.delayed(Duration(seconds: 2), () => Navigator.pushReplacementNamed(this.context, AppRoutes.login));
+        Future.delayed(Duration(seconds: 2), () => AppKeys.navigator.currentState.pushReplacementNamed(AppRoutes.login));
       } else {
         AuthN authN = AuthN.fromJSON(json.decode(data));
+        setState(() => accessToken = authN.token);
         props.getUserInfo(authN.token);
       }
     });
@@ -49,21 +53,24 @@ class LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderS
     }
 
     Error error = newProps.getUserInfoResponse.error;
-
     if (error != null) {
       if (error is APIError) {
         if (error.status == 401) {
-          Navigator.pushReplacementNamed(this.context, AppRoutes.login);
+          AppKeys.navigator.currentState.pushReplacementNamed(AppRoutes.login);
         }
       } else {
-        // TODO Should show in screen an error
+        // TODO Should show an error in screen
       }
 
       return;
     }
 
     if (newProps.getUserInfoResponse.data != null) {
-      Navigator.pushReplacementNamed(this.context, AppRoutes.home);
+      if (newProps.accessToken == null) {
+        newProps.setAccessToken(accessToken);
+      } else {
+        AppKeys.navigator.currentState.pushReplacementNamed(AppRoutes.main);
+      }
     }
   }
 
@@ -134,18 +141,24 @@ class LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderS
 }
 
 class LoadingScreenProps {
+  final String accessToken;
   final Function getUserInfo;
+  final Function setAccessToken;
   final GetUserInfoState getUserInfoResponse;
 
   LoadingScreenProps({
+    this.accessToken,
     this.getUserInfo,
+    this.setAccessToken,
     this.getUserInfoResponse,
   });
 }
 
 LoadingScreenProps mapStateToProps(Store<AppState> store) {
   return LoadingScreenProps(
+    accessToken: store.state.authn.accessToken,
     getUserInfoResponse: store.state.user.getInfo,
     getUserInfo: (String token) => store.dispatch(getUserInfo(token)),
+    setAccessToken: (String token) => store.dispatch(setAccessToken(token)),
   );
 }

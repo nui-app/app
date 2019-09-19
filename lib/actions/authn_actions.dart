@@ -32,3 +32,11 @@ RSAA authenticateRequest(String email, String password) {
 }
 
 ThunkAction<AppState> authenticate(String email, String password) => (Store<AppState> store) => store.dispatch(authenticateRequest(email, password));
+
+
+const SET_ACCESS_TOKEN = 'SET_ACCESS_TOKEN';
+
+Function(Store<AppState> store) setAccessToken(String token) => (Store<AppState> store) => store.dispatch({
+  'type': SET_ACCESS_TOKEN,
+  'token': token,
+});

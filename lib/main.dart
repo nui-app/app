@@ -5,13 +5,14 @@ import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux_api_middleware/redux_api_middleware.dart';
 
+import 'package:nui/keys.dart';
 import 'package:nui/routes.dart';
 
 import 'package:nui/models/app_state.dart';
 
 import 'package:nui/reducers/app_reducer.dart';
 
-import 'package:nui/components/home/home_screen.dart';
+import 'package:nui/components/main/main_screen.dart';
 import 'package:nui/components/login/login_screen.dart';
 import 'package:nui/components/loading/loading_screen.dart';
 
@@ -30,13 +31,14 @@ class App extends StatelessWidget {
       store: this.store,
       child: MaterialApp(
         title: 'Nui',
+        navigatorKey: AppKeys.navigator,
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
         routes: {
           AppRoutes.loading: (context) => LoadingScreen(),
           AppRoutes.login: (context) => LoginScreen(),
-          AppRoutes.home: (context) => HomeScreen(),
+          AppRoutes.main: (context) => MainScreen(),
         },
       ),
     );

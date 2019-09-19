@@ -7,10 +7,13 @@ import 'package:nui/models/user/user_state.dart';
 
 import 'package:nui/actions/user_actions.dart';
 
-UserState userReducer(UserState state, FSA action) {
+UserState userReducer(UserState state, dynamic action) {
   UserState newState = state;
 
-  switch (action.type) {
+  String type = action is FSA ? action.type : action['type'];
+  print(type);
+
+  switch (type) {
     case GET_USER_INFO_REQUEST:
       newState.getInfo.error = null;
       newState.getInfo.loading = true;

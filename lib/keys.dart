@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 class AppKeys {
-  // Base Screen
-  static final baseScreen = const Key('__baseScreen__');
+  // Navigator
+  static final navigator = GlobalKey<NavigatorState>();
 
   // Loading Screen
   static final loadingScreen = const Key('__loadingScreen__');
@@ -11,6 +11,6 @@ class AppKeys {
   // Login Screen
   static final loginScreen = const Key('__loginScreen__');
 
-  // Home Screen
-  static final homeScreen = const Key('__homeScreen__');
+  // Main Screen
+  static final mainScreen = const Key('__mainScreen__');
 }
