@@ -13,6 +13,8 @@ dependencies:
   redux_thunk: ^0.2.1
   redux_api_middleware: ^0.1.9
   flutter_secure_storage: ^3.3.1
+  flutter_progress_button:
+    path: /home/chnl/Documents/Projects/personal/flutter_progress_button
 
 dev_dependencies:
   flutter_test:

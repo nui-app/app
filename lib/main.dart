@@ -13,17 +13,25 @@ import 'package:nui/models/app_state.dart';
 import 'package:nui/reducers/app_reducer.dart';
 
 import 'package:nui/components/main/main_screen.dart';
-import 'package:nui/components/login/login_screen.dart';
+import 'package:nui/components/enrollment/enrollment_screen.dart';
 import 'package:nui/components/loading/loading_screen.dart';
 
-void main() => runApp(App());
-
-class App extends StatelessWidget {
+void main() {
   final store = Store<AppState>(
     appReducer,
     initialState: AppState.initial(),
     middleware: [thunkMiddleware, apiMiddleware],
   );
+
+  runApp(App(
+    store: store,
+  ));
+}
+
+class App extends StatelessWidget {
+  final Store<AppState> store;
+
+  App({ this.store });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +45,7 @@ class App extends StatelessWidget {
         ),
         routes: {
           AppRoutes.loading: (context) => LoadingScreen(),
-          AppRoutes.login: (context) => LoginScreen(),
+          AppRoutes.enrollment: (context) => EnrollmentScreen(),
           AppRoutes.main: (context) => MainScreen(),
         },
       ),

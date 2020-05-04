@@ -8,28 +8,28 @@ import 'package:nui/models/app_state.dart';
 class ListsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, ListsPageProps>(
+    return StoreConnector<AppState, ListsPageViewModel>(
       distinct: true,
-      converter: (store) => mapStateToProps(store),
-      builder: (context, props) {
+      converter: (store) => mapStateToViewModel(store),
+      builder: (context, vm) {
         return Center(
-          child: Text(props.accessToken),
+          child: Text(vm.accessToken),
         );
       }
     );
   }
 }
 
-class ListsPageProps {
+class ListsPageViewModel {
   final String accessToken;
 
-  ListsPageProps({
+  ListsPageViewModel({
     this.accessToken,
   });
 }
 
-ListsPageProps mapStateToProps(Store<AppState> store) {
-  return ListsPageProps(
+ListsPageViewModel mapStateToViewModel(Store<AppState> store) {
+  return ListsPageViewModel(
     accessToken: store.state.authn.accessToken,
   );
 }

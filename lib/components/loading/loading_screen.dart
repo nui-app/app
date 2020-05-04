@@ -33,21 +33,21 @@ class LoadingScreen extends StatefulWidget {
 class LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderStateMixin {
   String accessToken = '';
 
-  void handleInitialBuild(LoadingScreenProps props) {
+  void handleInitialBuild(LoadingScreenViewModel vm) {
     widget.storage.read(
       key: 'access_data',
     ).then((data) {
       if (data == null) {
-        Future.delayed(Duration(seconds: 2), () => AppKeys.navigator.currentState.pushReplacementNamed(AppRoutes.login));
+        Future.delayed(Duration(seconds: 2), () => AppKeys.navigator.currentState.pushReplacementNamed(AppRoutes.enrollment));
       } else {
         AuthN authN = AuthN.fromJSON(json.decode(data));
         setState(() => accessToken = authN.token);
-        props.getUserInfo(authN.token);
+        vm.getUserInfo(authN.token);
       }
     });
   }
 
-  void handleDidChange(LoadingScreenProps newProps) {
+  void handleDidChange(LoadingScreenViewModel newProps) {
     if (newProps.getUserInfoResponse.loading) {
       return;
     }
@@ -56,7 +56,7 @@ class LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderS
     if (error != null) {
       if (error is APIError) {
         if (error.status == 401) {
-          AppKeys.navigator.currentState.pushReplacementNamed(AppRoutes.login);
+          AppKeys.navigator.currentState.pushReplacementNamed(AppRoutes.enrollment);
         }
       } else {
         // TODO Should show an error in screen
@@ -76,12 +76,12 @@ class LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderS
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, LoadingScreenProps>(
+    return StoreConnector<AppState, LoadingScreenViewModel>(
       distinct: true,
-      converter: (store) => mapStateToProps(store),
-      onInitialBuild: (props) => this.handleInitialBuild(props),
-      onDidChange: (props) => this.handleDidChange(props),
-      builder: (context, props) {
+      converter: (store) => mapStateToViewModel(store),
+      onInitialBuild: (vm) => this.handleInitialBuild(vm),
+      onDidChange: (vm) => this.handleDidChange(vm),
+      builder: (context, vm) {
         return Scaffold(
           body: Stack(
             fit: StackFit.expand,
@@ -102,7 +102,7 @@ class LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderS
                         children: <Widget>[
                           AnimatedLogo(),
                           Padding(
-                            padding: EdgeInsets.only(top: 15.0),
+                            padding: const EdgeInsets.only(top: 15.0),
                           ),
                         ],
                       ),
@@ -115,7 +115,7 @@ class LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderS
                       children: <Widget>[
                         CircularProgressIndicator(),
                         Padding(
-                          padding: EdgeInsets.only(top: 20.0),
+                          padding: const EdgeInsets.only(top: 20.0),
                         ),
                         Text(
                           'Loading...',
@@ -140,13 +140,13 @@ class LoadingScreenState extends State<LoadingScreen> with SingleTickerProviderS
   }
 }
 
-class LoadingScreenProps {
+class LoadingScreenViewModel {
   final String accessToken;
   final Function getUserInfo;
   final Function setAccessToken;
   final GetUserInfoState getUserInfoResponse;
 
-  LoadingScreenProps({
+  LoadingScreenViewModel({
     this.accessToken,
     this.getUserInfo,
     this.setAccessToken,
@@ -154,8 +154,8 @@ class LoadingScreenProps {
   });
 }
 
-LoadingScreenProps mapStateToProps(Store<AppState> store) {
-  return LoadingScreenProps(
+LoadingScreenViewModel mapStateToViewModel(Store<AppState> store) {
+  return LoadingScreenViewModel(
     accessToken: store.state.authn.accessToken,
     getUserInfoResponse: store.state.user.getInfo,
     getUserInfo: (String token) => store.dispatch(getUserInfo(token)),
